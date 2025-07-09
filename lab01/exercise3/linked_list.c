@@ -8,6 +8,7 @@ Node *create_node(int data) {
     struct Node *new_node = malloc(sizeof(struct Node));
     if (new_node == NULL) {
         perror("Malloc failed\n");
+        
     }
     new_node->data = data;
     new_node->next = NULL;
@@ -55,11 +56,11 @@ void print_list(struct Node *head) {
 
 /* Iteratively reverses a linked list whose first node is HEAD */
 void reverse_list(struct Node **head) {
-    if (head == NULL) {
+    if (head == NULL || *head ==NULL) {
         return;
     }
     struct Node *curr = *head;
-    struct Node *next = (*head)->next;
+    struct Node *next = (*head)->next; //giving  Segmentation fault Now corrected
     curr->next = NULL;
     while (next != NULL) {
         struct Node *temp = next->next;
@@ -77,9 +78,16 @@ void add_to_back(Node **head, int data) {
         return;
     }
     Node *new_node = create_node(data);
-    Node *prev;
-    for (Node *curr = *head; curr != NULL; curr = curr->next) {
-        prev = curr;
+    if (*head == NULL) { // Check if the list is empty
+        *head = new_node; // If empty, set the new node as the head
+        return;
     }
-    prev->next = new_node;
+    //Node *prev;   not needed
+    for (Node *curr = *head; curr != NULL; curr = curr->next) {
+        if (curr->next == NULL) {  //giving  Segmentation fault Now corrected
+            curr->next = new_node; 
+            break; 
+        }     
+    }
+    //prev->next = new_node;  cauing error
 }
